@@ -15,7 +15,7 @@ function getRepoContributors(repoOwner, repoName, cb) {
               }
     }
 
-  request(options, function(error, response, body) {
+  request(options, (error, response, body) => {
     let parsedBody = JSON.parse(body)
       parsedBody.forEach((user) => {
         downloadImageByURL(user.avatar_url, user.login)
@@ -24,9 +24,9 @@ function getRepoContributors(repoOwner, repoName, cb) {
 }
 
 if (args.length !== 2) {
-  console.log("Error: an argument was not entered!")
+  console.log("Error: There should only be 2 arguments: 1) the repository owner and 2) the repository name!")
 } else {
-  getRepoContributors(args[0], args[1], function(err, result) {
+  getRepoContributors(args[0], args[1], (err, result) => {
     console.log("Errors: ", err)
     console.log("Result:", result)
   })
