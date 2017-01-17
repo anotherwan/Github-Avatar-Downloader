@@ -1,6 +1,7 @@
 'use strict'
 
 const request = require('request')
+const fs = require('fs')
 const tokens = require('./.env')
 
 
@@ -14,14 +15,18 @@ function getRepoContributors(repoOwner, repoName, cb) {
 
   request(options, function(error, response, body) {
     let parsedBody = JSON.parse(body)
-      for (let i = 0; i < parsedBody.length; i++) {
-        console.log(parsedBody[i].avatar_url)
-      }
+      parsedBody.forEach((user) => {
+        downloadImageByURL(user.avatar_url, user.login)
+      })
     })
-  }
-// }
+}
 
-getRepoContributors("jquery", "jquery", function(err, results) {
+getRepoContributors("jquery", "jquery", function(err, result) {
   console.log("Errors:", err)
   console.log("Result:", result)
 })
+
+function downloadImageByURL(imageUrl, login) {
+  request.get(imageUrl)
+    .pipe(fs.createWriteStream(`avatarsTemp/${login}.jpg`))
+}
