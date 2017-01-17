@@ -4,6 +4,8 @@ const request = require('request')
 const fs = require('fs')
 const tokens = require('./.env')
 
+let args = process.argv.slice(2)
+
 
 function getRepoContributors(repoOwner, repoName, cb) {
   let options = {
@@ -18,13 +20,17 @@ function getRepoContributors(repoOwner, repoName, cb) {
       parsedBody.forEach((user) => {
         downloadImageByURL(user.avatar_url, user.login)
       })
-    })
+  })
 }
 
-getRepoContributors("jquery", "jquery", function(err, result) {
-  console.log("Errors:", err)
-  console.log("Result:", result)
-})
+if (args.length !== 2) {
+  console.log("Error: an argument was not entered!")
+} else {
+  getRepoContributors(args[0], args[1], function(err, result) {
+    console.log("Errors: ", err)
+    console.log("Result:", result)
+  })
+}
 
 function downloadImageByURL(imageUrl, login) {
   request.get(imageUrl)
